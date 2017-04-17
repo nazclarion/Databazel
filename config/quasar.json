@@ -3,5 +3,10 @@
     "port": 20223
   },
   "mountings": {
+    "/baza/": {
+      "mongodb": {
+        "connectionUri": "mongodb://apikoga:apikoga@ds123050.mlab.com:23050/apikoga"
+      }
+    }
   }
 }
