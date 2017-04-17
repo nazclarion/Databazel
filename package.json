@@ -12,6 +12,7 @@
     "test-watch": "npm run testonly -- --watch --watch-extensions js"
   },
   "dependencies": {
+    "bcrypt": "^1.0.2",
     "can-use-dom": "^0.1.0",
     "chart.js": "^2.1.6",
     "codemirror": "^5.19.0",
