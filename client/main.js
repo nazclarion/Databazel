@@ -6,6 +6,7 @@ import home from './modules/home';
 import core from './modules/core';
 import admin from './modules/admin';
 import publishing from './modules/publishing';
+import gql from './modules/gql/';
 
 const context = initContext();
 const app = createApp(context);
@@ -16,4 +17,5 @@ app.loadModule(accounts);
 app.loadModule(admin);
 app.loadModule(core);
 app.loadModule(publishing);
+app.loadModule(gql);
 app.init();
