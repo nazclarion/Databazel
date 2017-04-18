@@ -6,6 +6,9 @@ const Dashboard = `
     name: String!
     users: [User]
   }
+  extend type Query {
+    dashboards: [Dashboard]
+  }
 `;
 
 export default () => [Dashboard];

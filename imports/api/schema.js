@@ -4,8 +4,6 @@ import { typeDefs as dashboardsTypeDefs} from './dashboadrs/';
 const rootTypes = () => [`
   type Query {
     say: String
-    dashboards: [Dashboard]
-    user: User
   }
 `];
 
