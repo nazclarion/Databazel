@@ -1,10 +1,10 @@
-import { typeDefs as usersTypeDefs} from './users/';
-import { typeDefs as dashboardsTypeDefs} from './dashboadrs/';
+import { typeDefs as UsersTypeDefs} from './users/';
+import { typeDefs as DashboardsTypeDefs} from './dashboadrs/';
 
-const rootTypes = () => [`
+const RootTypes = () => [`
   type Query {
     say: String
   }
 `];
 
-export default [rootTypes, usersTypeDefs, dashboardsTypeDefs];
+export default [RootTypes, UsersTypeDefs, DashboardsTypeDefs];
