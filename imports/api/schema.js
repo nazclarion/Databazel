@@ -5,6 +5,9 @@ const RootTypes = () => [`
   type Query {
     say: String
   }
+  type Mutation {
+    do: String
+  }
 `];
 
 export default [RootTypes, UsersTypeDefs, DashboardsTypeDefs];

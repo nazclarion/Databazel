@@ -21,4 +21,15 @@ export default {
       return user && user.isAdmin ? Dashboards.find().fetch() : [];
     },
   },
+  Mutation: {
+    submitDashboard: (_, args, context) => {
+      const _dashboardId = Dashboards.insert({
+        name: args['name'],
+        chartsId: [],
+        users: [context.userId],
+        viewsCounter: 0,
+      });
+      return Dashboards.findOne(_dashboardId);
+    }
+  },
 };

@@ -6,6 +6,9 @@ import { resolvers as DashboardsResolvers } from './dashboadrs/';
 const RootResolvers = {
   Query: {
     say: () => 'hello world',
+  },
+  Mutation: {
+    do: () => 'Done',
   }
 };
 
