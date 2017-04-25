@@ -150,6 +150,7 @@ const COPY_DASHBOARD_MUTATION = gql`
     }
   }
 `;
+
 const RENAME_DASHBOARD_MUTATION = gql`
   mutation RenameDashboard($id: String!, $name: String!) {
     renameDashboard(id: $id, name: $name) {
@@ -166,6 +167,7 @@ const RENAME_DASHBOARD_MUTATION = gql`
     }
   }
 `;
+
 const DELETE_DASHBOARD_MUTATION = gql`
   mutation DeleteDashboard($id: String!) {
     deleteDashboard(id: $id) {
@@ -174,54 +176,60 @@ const DELETE_DASHBOARD_MUTATION = gql`
   }
 `;
 
-export default compose(
-  graphql(COPY_DASHBOARD_MUTATION, {
-    name: 'copyDashboardMutation',
-    props: ({ copyDashboardMutation }) => ({
-      copyDashboard: id => copyDashboardMutation({
-        variables: { id },
-        updateQueries: {
-          Dashboards: (prevData, { mutationResult }) => ({
+const withCopyDashboardMutation = graphql(COPY_DASHBOARD_MUTATION, {
+  name: 'copyDashboardMutation',
+  props: ({ copyDashboardMutation }) => ({
+    copyDashboard: id => copyDashboardMutation({
+      variables: { id },
+      updateQueries: {
+        Dashboards: (prevData, { mutationResult }) => ({
+          ...prevData,
+          dashboards: [...prevData.dashboards, mutationResult.data.copyDashboard],
+        }),
+      }
+    }),
+  }),
+});
+
+const withRenameDashboardMutation = graphql(RENAME_DASHBOARD_MUTATION, {
+  name: 'renameDashboardMutation',
+  props: ({ renameDashboardMutation }) => ({
+    renameDashboard: (id, name) => renameDashboardMutation({
+      variables: { id, name },
+      updateQueries: {
+        Dashboards: (prevData, { mutationResult }) => {
+          const prevDashboards = prevData.dashboards.filter(x => x.id != id);
+          return {
             ...prevData,
-            dashboards: [...prevData.dashboards, mutationResult.data.copyDashboard],
-          }),
-        }
-      }),
+            dashboards: [...prevDashboards, mutationResult.data.renameDashboard],
+          };
+        },
+      }
     }),
   }),
-  graphql(RENAME_DASHBOARD_MUTATION, {
-    name: 'renameDashboardMutation',
-    props: ({ renameDashboardMutation }) => ({
-      renameDashboard: (id, name) => renameDashboardMutation({
-        variables: { id, name },
-        updateQueries: {
-          Dashboards: (prevData, { mutationResult }) => {
-            const prevDashboards = prevData.dashboards.filter(x => x.id != id);
-            return {
-              ...prevData,
-              dashboards: [...prevDashboards, mutationResult.data.renameDashboard],
-            };
-          },
-        }
-      }),
-    }),
+});
+
+const withDeleteDashboardMutation = graphql(DELETE_DASHBOARD_MUTATION, {
+  name: 'deleteDashboardMutation',
+  props: ({ deleteDashboardMutation }) => ({
+    deleteDashboard: id => deleteDashboardMutation({
+      variables: { id },
+      updateQueries: {
+        Dashboards: (prevData, { mutationResult }) => {
+          const nextDashboards = prevData.dashboards.filter(x => x.id !== id);
+          return {
+            ...prevData,
+            dashboards: nextDashboards,
+          };
+        },
+      }
+    })
   }),
-  graphql(DELETE_DASHBOARD_MUTATION, {
-    name: 'deleteDashboardMutation',
-    props: ({ deleteDashboardMutation }) => ({
-      deleteDashboard: id => deleteDashboardMutation({
-        variables: { id },
-        updateQueries: {
-          Dashboards: (prevData, { mutationResult }) => {
-            const nextDashboards = prevData.dashboards.filter(x => x.id !== id);
-            return {
-              ...prevData,
-              dashboards: nextDashboards,
-            };
-          },
-        }
-      })
-    }),
-  }),
+});
+
+export default compose(
+  withCopyDashboardMutation,
+  withRenameDashboardMutation,
+  withDeleteDashboardMutation,
 )(DashboardItem);
 // <<< DATA / ACTIONS CONTAINER

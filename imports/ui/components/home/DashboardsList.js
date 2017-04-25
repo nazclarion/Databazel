@@ -155,25 +155,29 @@ const SUBMIT_DASHBOARD_MUTATION = gql`
   }
 `;
 
+const withDashboardQuery = graphql(DASHBOADRS_QUERY, {
+  props: ({ data: { loading, dashboards } }) => ({
+    isLoading: loading,
+    dashboards,
+  }),
+});
+
+const withSubmitDashboardMutation = graphql(SUBMIT_DASHBOARD_MUTATION, {
+  name: 'submitDashboardMutation',
+  props: ({ submitDashboardMutation }) => ({
+    submitDashboard: name => submitDashboardMutation({
+      variables: { name },
+      updateQueries: {
+        Dashboards: ( prevData, { mutationResult }) => ({
+          ...prevData,
+          dashboards: [...prevData.dashboards, mutationResult.data.submitDashboard],
+        }),
+      },
+    }),
+  }),
+});
+
 export default compose(
-  graphql(DASHBOADRS_QUERY, {
-    props: ({ data: { loading, dashboards } }) => ({
-      isLoading: loading,
-      dashboards,
-    }),
-  }),
-  graphql(SUBMIT_DASHBOARD_MUTATION, {
-    name: 'submitDashboardMutation',
-    props: ({ submitDashboardMutation }) => ({
-      submitDashboard: name => submitDashboardMutation({
-        variables: { name },
-        updateQueries: {
-          Dashboards: ( prevData, { mutationResult }) => ({
-            ...prevData,
-            dashboards: [...prevData.dashboards, mutationResult.data.submitDashboard],
-          }),
-        },
-      }),
-    }),
-  }),
+  withDashboardQuery,
+  withSubmitDashboardMutation,
 )(DashboardsList);
