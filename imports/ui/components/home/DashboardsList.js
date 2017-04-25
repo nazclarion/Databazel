@@ -8,7 +8,7 @@ import ContentAdd from 'material-ui/svg-icons/content/add';
 import { CardText, Card } from 'material-ui/Card';
 import { grey400 } from 'material-ui/styles/colors';
 
-import DashboardListItem from './DashboardListItem.js';
+import DashboardListItem from './DashboardsListItem.js';
 
 const styles = {
   card: {
