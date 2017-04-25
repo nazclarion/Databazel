@@ -1,14 +1,14 @@
 import { mount } from 'react-mounter';
 import React from 'react';
 
-import { ApolloClient, ApolloProvider } from 'react-apollo';
+import { ApolloProvider } from 'react-apollo';
+import ApolloClient from 'apollo-client';
+import { meteorClientConfig } from 'meteor/apollo';
 
 import HomePage from '/imports/ui/pages/HomePage.js';
 
 // Create the client
-const client = new ApolloClient({
-  dataIdFromObject: o => o.id
-});
+const client = new ApolloClient(meteorClientConfig());
 
 export default function (injectDeps, { MainLayout }) {
   const MainLayoutCtx = injectDeps(MainLayout);

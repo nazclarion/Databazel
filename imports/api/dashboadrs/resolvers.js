@@ -38,7 +38,6 @@ export default {
       return new Promise((resolve, reject) => {
         const _dashboard = Dashboards.findOne(_id);
         if (!_dashboard) {
-          // console.log('dashboard not found: ', _id);
           reject(new Meteor.Error('Dashboards.NotFound', `Dashboard {_id: ${_id}} not found`))
         };
 
@@ -48,6 +47,7 @@ export default {
           name: `${_dashboard.name} copy`,
           users: [context.userId],
         });
+
         resolve(Dashboards.findOne(_newDashboardId));
       });
     },
@@ -55,26 +55,34 @@ export default {
       const { id: _id, name } = args;
 
       return new Promise((resolve, reject) => {
-        Meteor.call('Dashboards.rename', _id, name, context.userId, error => {
+        Dashboards.update({
+          _id: _id,
+        }, {
+          $set: {
+            name,
+          },
+        }, error => {
           if (error) {
-            // console.log('error renaming dashboard: ', error);
-            reject(error)
+            reject(error);
           };
           resolve(Dashboards.findOne(_id));
-        })
+        });
       });
     },
     deleteDashboard: (root, args, context, info) => {
       const { id: _id } = args;
 
       return new Promise((resolve, reject) => {
-        Meteor.call('Dashboards.delete', _id, context.userId, error => {
+        const _collection = Dashboards.rawCollection();
+
+        _collection.deleteOne({
+          _id: _id,
+        }, error => {
           if (error) {
-            console.log('error removing dashboard: ', error);
-            // reject(error);
+            reject(error);
           };
           resolve({ _id });
-        })
+        });
       });
     },
   },
